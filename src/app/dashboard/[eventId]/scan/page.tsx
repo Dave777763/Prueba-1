@@ -98,7 +98,6 @@ export default function ScanPage({ params }: { params: Promise<{ eventId: string
                         <Scanner
                             onScan={(result) => result[0] && handleScan(result[0].rawValue)}
                             components={{
-                                audio: false,
                                 onOff: false,
                                 torch: true,
                                 zoom: false,
