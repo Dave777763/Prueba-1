@@ -13,6 +13,7 @@ import {
     PartyPopper,
     Heart
 } from "lucide-react";
+import QRCode from "react-qr-code";
 
 interface WeddingEvent {
     id: string;
@@ -218,6 +219,21 @@ export default function InvitationPage({ params }: { params: Promise<{ eventId: 
                                         ? `Hemos registrado ${selectedPasses} pases para tu lugar. ¡Nos vemos pronto!`
                                         : "Gracias por avisarnos, se te extrañará."}
                                 </p>
+
+                                {guest.status === "Confirmado" && (
+                                    <div className="mt-6 p-4 bg-white rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center">
+                                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Tu Pase de Entrada</p>
+                                        <div className="p-2 bg-white rounded-lg shadow-sm">
+                                            <QRCode
+                                                value={JSON.stringify({ eventId, guestId })}
+                                                size={150}
+                                                style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                                                viewBox={`0 0 150 150`}
+                                            />
+                                        </div>
+                                        <p className="text-xs text-gray-400 mt-2">Muestra este código en la entrada</p>
+                                    </div>
+                                )}
                                 <button
                                     onClick={() => setRsvpDone(false)}
                                     className="text-rose-500 text-sm font-bold hover:underline"
