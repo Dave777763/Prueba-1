@@ -44,6 +44,8 @@ interface Guest {
     group: string;
     passes: number;
     status: "Confirmado" | "Pendiente" | "Declinado";
+    attended?: boolean;
+    attendedAt?: any;
 }
 
 export default function EventDetailPage({ params }: { params: Promise<{ eventId: string }> }) {
