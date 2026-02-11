@@ -246,6 +246,12 @@ export default function EventDetailPage({ params }: { params: Promise<{ eventId:
                                     {guests.reduce((acc, g) => acc + g.passes, 0)}
                                 </p>
                             </div>
+                            <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm ring-2 ring-emerald-500/10">
+                                <p className="text-xs text-emerald-600 uppercase font-bold tracking-wider mb-1">Asistieron</p>
+                                <p className="text-2xl font-bold text-gray-800">
+                                    {guests.filter(g => g.attended).length}
+                                </p>
+                            </div>
                         </div>
 
                         {/* Guests List */}
@@ -293,6 +299,11 @@ export default function EventDetailPage({ params }: { params: Promise<{ eventId:
                                                         {guest.status === "Declinado" && (
                                                             <span className="flex items-center gap-1.5 text-sm text-rose-500 font-bold">
                                                                 <XCircle size={16} /> Declinado
+                                                            </span>
+                                                        )}
+                                                        {guest.attended && (
+                                                            <span className="mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold border border-emerald-200">
+                                                                Dentro del evento
                                                             </span>
                                                         )}
                                                     </td>
