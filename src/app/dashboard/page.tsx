@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, X, Loader2, Calendar, MapPin, ChevronRight, PartyPopper } from "lucide-react";
+import { Plus, X, Loader2, Calendar, MapPin, ChevronRight, PartyPopper, Link as LinkIcon } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, collectionGroup } from "firebase/firestore";
 
@@ -11,6 +11,7 @@ interface WeddingEvent {
     name: string;
     date: string;
     location: string;
+    mapUrl?: string;
     createdAt?: any;
 }
 
@@ -24,7 +25,8 @@ export default function DashboardPage() {
     const [formData, setFormData] = useState({
         name: "",
         date: "",
-        location: ""
+        location: "",
+        mapUrl: ""
     });
 
     // Escuchar invitados de TODOS los eventos (collectionGroup)
@@ -88,7 +90,7 @@ export default function DashboardPage() {
             console.log("Evento guardado con ID:", docRef.id);
 
             // Limpiar formulario y cerrar modal
-            setFormData({ name: "", date: "", location: "" });
+            setFormData({ name: "", date: "", location: "", mapUrl: "" });
             setIsModalOpen(false);
 
             // Opcional: Podríamos disparar un refresh de los datos aquí
@@ -180,6 +182,12 @@ export default function DashboardPage() {
                                         <MapPin size={14} />
                                         <span>{event.location}</span>
                                     </div>
+                                    {event.mapUrl && (
+                                        <div className="flex items-center gap-2 text-sm text-emerald-600">
+                                            <LinkIcon size={14} />
+                                            <span>Link de mapa incluido</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))}
@@ -230,7 +238,7 @@ export default function DashboardPage() {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-gray-900 mb-1">Ubicación</label>
+                                <label className="block text-sm font-bold text-gray-900 mb-1">Ubicación (Nombre del Lugar)</label>
                                 <input
                                     type="text"
                                     name="location"
@@ -241,6 +249,20 @@ export default function DashboardPage() {
                                     required
                                     disabled={loading}
                                 />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-bold text-gray-900 mb-1">Link de Google Maps (Opcional)</label>
+                                <input
+                                    type="url"
+                                    name="mapUrl"
+                                    value={formData.mapUrl}
+                                    onChange={handleChange}
+                                    placeholder="Ej. https://maps.app.goo.gl/..."
+                                    className="w-full px-4 py-2 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition"
+                                    disabled={loading}
+                                />
+                                <p className="text-xs text-gray-500 mt-1">Si lo dejas vacío, buscaremos por el nombre del lugar.</p>
                             </div>
 
                             <div className="pt-4 flex justify-end gap-3">

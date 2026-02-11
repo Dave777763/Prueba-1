@@ -10,16 +10,18 @@ import {
     CheckCircle2,
     XCircle,
     Loader2,
-    PartyPopper,
-    Heart
+    Heart,
+    ExternalLink
 } from "lucide-react";
 import QRCode from "react-qr-code";
+import AddToCalendar from "@/components/AddToCalendar";
 
 interface WeddingEvent {
     id: string;
     name: string;
     date: string;
     location: string;
+    mapUrl?: string;
 }
 
 interface Guest {
@@ -107,6 +109,12 @@ export default function InvitationPage({ params }: { params: Promise<{ eventId: 
         );
     }
 
+    // Google Maps Link Logic
+    // If mapUrl exists, use it directly. Otherwise, search by location name.
+    const mapLink = event.mapUrl
+        ? event.mapUrl
+        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`;
+
     return (
         <div className="min-h-screen bg-[#fffcfc] flex flex-col items-center py-10 px-4">
             {/* Decoración Superior */}
@@ -127,29 +135,42 @@ export default function InvitationPage({ params }: { params: Promise<{ eventId: 
 
                 <div className="p-8 md:p-12 space-y-10 relative z-10">
                     {/* Detalles */}
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-4">
-                            <div className="h-12 w-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500">
+                    <div className="space-y-8">
+                        {/* Fecha y Calendario */}
+                        <div className="flex items-start gap-4">
+                            <div className="h-12 w-12 rounded-2xl bg-rose-50 flex-shrink-0 flex items-center justify-center text-rose-500">
                                 <Calendar size={24} />
                             </div>
-                            <div>
-                                <p className="text-xs font-bold text-rose-400 uppercase tracking-widest">Cuándo</p>
-                                <p className="text-xl font-bold text-gray-800">{event.date}</p>
+                            <div className="flex-1">
+                                <p className="text-xs font-bold text-rose-400 uppercase tracking-widest mb-1">Cuándo</p>
+                                <p className="text-xl font-bold text-gray-800 mb-2">{event.date}</p>
+                                <AddToCalendar event={event} />
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-4">
-                            <div className="h-12 w-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500">
+                        {/* Ubicación y Mapa */}
+                        <div className="flex items-start gap-4">
+                            <div className="h-12 w-12 rounded-2xl bg-rose-50 flex-shrink-0 flex items-center justify-center text-rose-500">
                                 <MapPin size={24} />
                             </div>
-                            <div>
-                                <p className="text-xs font-bold text-rose-400 uppercase tracking-widest">Dónde</p>
-                                <p className="text-xl font-bold text-gray-800">{event.location}</p>
+                            <div className="flex-1">
+                                <p className="text-xs font-bold text-rose-400 uppercase tracking-widest mb-1">Dónde</p>
+                                <p className="text-xl font-bold text-gray-800 mb-2">{event.location}</p>
+                                <a
+                                    href={mapLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1 text-sm font-bold text-rose-600 hover:text-rose-700 hover:underline transition"
+                                >
+                                    <span>Ver en Mapa</span>
+                                    <ExternalLink size={14} />
+                                </a>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-4">
-                            <div className="h-12 w-12 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500">
+                        {/* Invitado */}
+                        <div className="flex items-start gap-4">
+                            <div className="h-12 w-12 rounded-2xl bg-rose-50 flex-shrink-0 flex items-center justify-center text-rose-500">
                                 <Users size={24} />
                             </div>
                             <div>
